@@ -5,6 +5,7 @@ import com.example.romashkabackend.exception.ProductNotFound;
 import com.example.romashkabackend.model.Product;
 import com.example.romashkabackend.repository.ProductRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,6 +35,11 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public void deleteProductById(UUID id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Product> findAll(Specification<Product> spec) {
+        return productRepository.findAll(spec);
     }
 
 }

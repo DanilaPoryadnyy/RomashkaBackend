@@ -5,6 +5,7 @@ import com.example.romashkabackend.dto.ProductDTO;
 import com.example.romashkabackend.model.Product;
 import com.example.romashkabackend.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,6 +51,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void removeProductById(UUID id) {
         productDao.deleteProductById(id);
+    }
+
+    public List<Product> findProductsWithSpecifications(Specification<Product> spec) {
+        return productDao.findAll(spec);
     }
 }
 
