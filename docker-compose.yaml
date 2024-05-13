@@ -1,0 +1,27 @@
+services:
+  db:
+    container_name: postgresql_container
+    image: postgres
+    ports:
+      - "5434:5432"
+    environment:
+      - POSTGRES_DB=mydb
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+    volumes:
+      - /home/steepfire/postgres_container_mydata:/var/lib/postgresql/data
+    restart: always
+
+  backend:
+    build: .
+    container_name: romashkabackend_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - spring.datasource.url=jdbc:postgresql://db:5432/mydb
+      - spring.datasource.username=admin
+      - spring.datasource.password=admin
+      - spring.jpa.hibernate.ddl-auto=update
