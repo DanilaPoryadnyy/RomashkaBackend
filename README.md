@@ -59,3 +59,23 @@ ___
 ### `DELETE` [/product/{id}](http://localhost:8080/product/{id})
 
 Удалить товар по id
+
+### `GET` [/product/search](http://localhost:8080/product/search?name={name}&minPrice={minPrice}&maxPrice={maxPrice}&available={available}&sortBy={name/price}&sortDirection={asc/desc})
+
+Выполнить сортировку и/или фильтрацию
+
+Параметры:
+- `name` (optional): Фильтрация по имени.
+- `minPrice` (optional): Фильтрация по минимальной цене.
+- `maxPrice` (optional): Фильтрация по максимальной цене.
+- `available` (optional): Фильтрация по наличию товара (true/false).
+- `sortBy` (optional): Сортировка по имени или цене (name, price).
+- `sortDirection` (optional): Направление сортировки (asc/desc).
+
+Тело ответа:
+
+- `id`
+- `name` - Название товара
+- `description` - Описание товара
+- `price` - Цена товара
+- `available` - Наличие товара
