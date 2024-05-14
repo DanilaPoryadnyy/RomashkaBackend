@@ -1,5 +1,4 @@
 package com.example.romashkabackend.controller;
-
 import com.example.romashkabackend.dto.ProductDTO;
 import com.example.romashkabackend.model.Product;
 import com.example.romashkabackend.service.ProductService;
@@ -12,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,25 +54,55 @@ public class ProductController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) Boolean available
+            @RequestParam(required = false) Boolean available,
+            @RequestParam(required = false) String sortBy
     ) {
-        Specification<Product> spec = Specification.where(null);
+        List<Specification<Product>> filters = Stream.of(
+                        buildNameSpecification(name),
+                        buildMinPriceSpecification(minPrice),
+                        buildMaxPriceSpecification(maxPrice),
+                        buildAvailabilitySpecification(available)
+                )
+                .filter(Objects::nonNull)
+                .toList();
 
-        if (name != null && !name.isEmpty()) {
-            spec = spec.and(ProductSpecifications.hasName(name));
-        }
-        if (minPrice != null) {
-            spec = spec.and(ProductSpecifications.hasPriceGreaterThan(minPrice));
-        }
-        if (maxPrice != null) {
-            spec = spec.and(ProductSpecifications.hasPriceLessThan(maxPrice));
-        }
-        if (available != null) {
-            spec = spec.and(ProductSpecifications.hasAvailability(available));
+        Specification<Product> combinedSpec = filters.stream().reduce(Specification::and).orElse(null);
+
+        if (sortBy != null && !sortBy.isEmpty()) {
+            switch (sortBy.toLowerCase()) {
+                case "name":
+                    combinedSpec = addSortSpecification(combinedSpec, ProductSpecifications::sortByName);
+                    break;
+                case "price":
+                    combinedSpec = addSortSpecification(combinedSpec, ProductSpecifications::sortByPrice);
+                    break;
+                default:
+                    break;
+            }
         }
 
-        List<Product> products = productService.findProductsWithSpecifications(spec);
+        List<Product> products = productService.findProductsWithSpecifications(combinedSpec);
 
         return ResponseEntity.ok(products);
+    }
+
+    private Specification<Product> addSortSpecification(Specification<Product> spec, Supplier<Specification<Product>> sortSupplier) {
+        return spec != null ? spec.and(sortSupplier.get()) : sortSupplier.get();
+    }
+
+    private Specification<Product> buildNameSpecification(String name) {
+        return name != null && !name.isEmpty() ? ProductSpecifications.hasName(name) : null;
+    }
+
+    private Specification<Product> buildMinPriceSpecification(Double minPrice) {
+        return minPrice != null ? ProductSpecifications.hasPriceGreaterThan(minPrice) : null;
+    }
+
+    private Specification<Product> buildMaxPriceSpecification(Double maxPrice) {
+        return maxPrice != null ? ProductSpecifications.hasPriceLessThan(maxPrice) : null;
+    }
+
+    private Specification<Product> buildAvailabilitySpecification(Boolean available) {
+        return available != null ? ProductSpecifications.hasAvailability(available) : null;
     }
 }

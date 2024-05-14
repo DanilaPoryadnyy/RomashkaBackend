@@ -53,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
         productDao.deleteProductById(id);
     }
 
+    @Override
     public List<Product> findProductsWithSpecifications(Specification<Product> spec) {
         return productDao.findAll(spec);
     }

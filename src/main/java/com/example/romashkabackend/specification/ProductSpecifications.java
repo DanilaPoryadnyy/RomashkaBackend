@@ -1,5 +1,4 @@
 package com.example.romashkabackend.specification;
-
 import com.example.romashkabackend.model.Product;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -21,4 +20,17 @@ public class ProductSpecifications {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("available"), available);
     }
 
+    public static Specification<Product> sortByName() {
+        return (root, query, criteriaBuilder) -> {
+            query.orderBy(criteriaBuilder.asc(root.get("name")));
+            return criteriaBuilder.conjunction();
+        };
+    }
+
+    public static Specification<Product> sortByPrice() {
+        return (root, query, criteriaBuilder) -> {
+            query.orderBy(criteriaBuilder.asc(root.get("price")));
+            return criteriaBuilder.conjunction();
+        };
+    }
 }
