@@ -1,81 +1,329 @@
-# RomashkaCompany API
 
 ___
 
 ## Оглавление
 
-1. [Product](#product)
+1. [Tickets](#tickets)
+2. [ClientTickets](#clientTickets)
+3. [Auth & registration](#auth--registration)
+4. [UserData](#userData)
+5. [Image](#image)
 
 ___
 
-## Product
+## Tickets
 
-### `POST` [/product](http://localhost:8080/product)
+### `POST` [/tickets](http://localhost:8080/tickets)
 
-Создать товар
+Создать тикет от лица менеджера
 
-Тело запроса
-
-- `name` - Название товара (ограничено 255 символами и обязательно при создании)
-- `description` - Описание товара (ограничено 4096 символами)
-- `price` - Цена товара (Не меньше "0")
-- `available` - Наличие товара (по умол. false)
-
-### `GET` [/product](http://localhost:8080/product)
-
-Получить список товаров
-
-Тело ответа
-
-- `id`
-    - `name` - Название товара
-    - `description` - Описание товара
-    - `price` - Цена товара
-    - `available` - Наличие товара
-
-### `GET` [/product/{id}](http://localhost:8080/product/{id})
-
-Получить товар по id
-
-Тело ответа
-
-- `id`
-- `name` - Название товара
-- `description` - Описание товара
-- `price` - Цена товара
-- `available` - Наличие товара
-
-### `PUT` [/product/{id}](http://localhost:8080/product/{id})
-
-Обновить товар по id
+Требования: Роль "менеджер"
 
 Тело запроса
 
-- `name` - Название товара (ограничено 255 символами и обязательно при создании)
-- `description` - Описание товара (ограничено 4096 символами)
-- `price` - Цена товара (Не меньше "0")
-- `available` - Наличие товара (по умол. false)
+- `typeOfTechnic` - Тип техники
+- `model` - модель
+- `description` - описание
+- `client` - id клиента
+- `master` - id мастер
+- `idStatus` - id статуса заявки (1 -Новый, 2 -В процессе, 3 -Готово)
+          
+Тело ответа
 
-### `DELETE` [/product/{id}](http://localhost:8080/product/{id})
+- `CREATED`
 
-Удалить товар по id
+### `GET` [/tickets](http://localhost:8080/tickets)
 
-### `GET` [/product/search](http://localhost:8080/product/search?name={name}&minPrice={minPrice}&maxPrice={maxPrice}&available={available}&sortBy={name/price}&sortDirection={asc/desc})
+Получить список всех тикетов
 
-Выполнить сортировку и/или фильтрацию
+Требования: Роль "менеджер"
 
-Параметры:
-- `name` (optional): Фильтрация по имени.
-- `minPrice` (optional): Фильтрация по минимальной цене.
-- `maxPrice` (optional): Фильтрация по максимальной цене.
-- `available` (optional): Фильтрация по наличию товара (true/false).
-- `sortBy` (optional): Сортировка по имени или цене (name, price).
-- `sortDirection` (optional): Направление сортировки (asc/desc).
+Тело ответа
+```json
+{
+        "id": 
+        "typeOfTechnic": 
+        "model": 
+        "description":
+        "client": {
+            "id":
+            "snils":
+            "inn": 
+            "passportSeries": 
+            "passportNumber": 
+            "phone":
+            "firstName":
+            "lastName": 
+            "middleName": 
+            "birthdate": 
+            "address": 
+        },
+        "master": {
+            "id":
+            "snils": 
+            "inn": 
+            "passportSeries": 
+            "passportNumber": 
+            "phone":
+            "firstName": 
+            "lastName": 
+            "middleName": 
+            "birthdate": 
+            "address": 
+        },
+        "idstatus": {
+            "id":
+            "statusname":
+        },
+        "registrationdate":
+    }
+```
+### `GET` [/ticket/{id}](http://localhost:8080/ticket/{id})
 
-Тело ответа:
+Получить тикет по id
 
-- `id`
-- `name` - Название товара
-- `description` - Описание товара
-- `price` - Цена товара
-- `available` - Наличие товара
+Требования: Роль "менеджер"
+
+Тело ответа
+
+```json
+{
+        "id": 
+        "typeOfTechnic": 
+        "model": 
+        "description":
+        "client": {
+            "id":
+            "snils":
+            "inn": 
+            "passportSeries": 
+            "passportNumber": 
+            "phone":
+            "firstName":
+            "lastName": 
+            "middleName": 
+            "birthdate": 
+            "address": 
+        },
+        "master": {
+            "id":
+            "snils": 
+            "inn": 
+            "passportSeries": 
+            "passportNumber": 
+            "phone":
+            "firstName": 
+            "lastName": 
+            "middleName": 
+            "birthdate": 
+            "address": 
+        },
+        "idstatus": {
+            "id":
+            "statusname":
+        },
+        "registrationdate":
+    }
+```
+
+### `PUT` [/tickets/{id}](http://localhost:8080/tickets/{id})
+
+Обновить тикет по id
+
+Тело запроса
+
+- `typeOfTechnic` - Тип техники
+- `model` - модель
+- `description` - описание
+- `client` - id клиента
+- `master` - id мастер
+- `idStatus` - id статуса заявки (1 -Новый, 2 -В процессе, 3 -Готово)
+
+___
+
+## ClientTickets
+
+### `POST` [/client-ticket](http://localhost:8080/client-ticket)
+
+Создать тикет от лица клиента
+
+Требования: Роль "клиент"
+
+Тело запроса
+
+- `typeOfTechnic` - Тип техники
+- `model` - модель
+- `description` - описание
+          
+Тело ответа
+
+- `CREATED`
+
+### `PUT` [/client-ticket](http://localhost:8080/client-ticket)
+
+Обновить тикет от лица клиента
+
+Требования: Роль "клиент"
+
+Тело запроса
+
+- `typeOfTechnic` - Тип техники
+- `model` - модель
+- `description` - описание
+          
+Тело ответа
+
+- `CREATED`
+
+### `GET` [/client-ticket](http://localhost:8080/client-ticket)
+
+Получить все тикеты от лица клиента
+
+Требования: Роль "клиент"
+
+Тело ответа
+
+```json
+{
+        "id": 
+        "typeOfTechnic": 
+        "model": 
+        "description":
+        "clientData": {
+            "id": 
+            "snils": 
+            "inn": 
+            "passportSeries":
+            "passportNumber": 
+            "phone": 
+            "firstName": 
+            "lastName":
+            "middleName": 
+            "birthdate": 
+            "address": 
+        },
+        "registrationdate":
+    }
+```
+___
+
+## Auth & registration
+
+### `POST` [/auth/register](http://localhost:8080/auth/register)
+
+Регистрирует пользователя в системе
+
+Тело запроса
+
+- `email`: адрес электронной почты пользователя
+- `password`: пароль
+
+Тело ответа
+
+- `token`: токен аутентификации
+
+### `POST` [/auth/authenticate](http://localhost:8080/auth/authenticate)
+
+Авторизует пользователя в системе
+
+Тело запроса
+
+- `email`: адрес электронной почты пользователя
+- `password`: пароль
+
+Тело ответа
+
+- `token`: токен аутентификации
+
+___
+
+## UserData
+
+### `PUT` [/user-data](http://localhost:8080/user-data)
+
+Обновить доп.информацию о своём аккаунте (доступно всем)
+
+Тело запроса
+```json
+{
+    "snils":
+    "inn":
+    "passportSeries":
+    "passportNumber":
+    "phone":
+    "firstName":
+    "lastName":
+    "middleName":
+    "birthdate":
+    "address":
+}
+```
+
+### `GET` [/user-data](http://localhost:8080/user-data)
+
+Получить доп информацию о себе
+
+Тело ответа
+```json
+{
+    "snils":
+    "inn":
+    "passportSeries":
+    "passportNumber":
+    "phone":
+    "firstName":
+    "lastName":
+    "middleName":
+    "birthdate":
+    "address":
+}
+```
+### `GET` [/user-data/{id}](http://localhost:8080/user-data/{id})
+
+Получить доп информацию о лице
+
+Требования: роль "менеджер"
+
+Тело ответа
+```json
+{
+    "snils":
+    "inn":
+    "passportSeries":
+    "passportNumber":
+    "phone":
+    "firstName":
+    "lastName":
+    "middleName":
+    "birthdate":
+    "address":
+}
+```
+
+___
+
+## Image
+
+### `POST` [/image](http://localhost:8080/image)
+
+Добавить изображение аккаунта
+
+Запрос должен иметь тип содержимого multipart/form-data
+
+Тело запроса
+
+| Key  | Value             |
+|------|-------------------|
+| file | path-to-photo.jpg |
+
+Тело ответа
+
+- `CREATED`
+
+### `GET` [/image](http://localhost:8080/image)
+
+Получить изображение аккаунта 
+
+Тело ответа
+
+- `*IMAGE*`
